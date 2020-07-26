@@ -1,8 +1,12 @@
 import 'package:bati_turbo_erp/screens/main_screen.dart';
+import 'core/locator.dart';
 import 'package:flutter/material.dart';
 
 
-void main() => runApp(MyApp());
+void main() {
+  setupLocators();
+  runApp(MyApp());
+  }
 
 class MyApp extends StatelessWidget {
   @override

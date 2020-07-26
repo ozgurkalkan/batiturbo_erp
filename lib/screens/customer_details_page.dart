@@ -8,43 +8,28 @@ class CustomerPage extends StatefulWidget {
   _CustomerPageState createState() => _CustomerPageState();
 }
 
-class _CustomerPageState extends State<CustomerPage> {
+class _CustomerPageState extends State < CustomerPage > {
   @override
   Widget build(BuildContext context) {
+
+    return _customerPage();
+  }
+
+  Widget _customerPage() {
     return Scaffold(
       appBar: AppBar(
         title: Text("Müşteri Ekleme"),
       ),
-      body: Container(
-        child: AddCustomerForm(),
-      ),
-
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-
-        },
-        label: Text("Onayla"),
-        icon: Icon(Icons.check),
-      ),
-
+      floatingActionButton: _floatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      
+      body: _customerForm(),
+
     );
   }
-}
 
-class AddCustomerForm extends StatefulWidget {
+  Widget _customerForm() {
 
-  @override
-  _AddCustomerFormState createState() => _AddCustomerFormState();
-}
-
-class _AddCustomerFormState extends State < AddCustomerForm > {
-  final _formKey = GlobalKey < FormState > ();
-
-
-  @override
-  Widget build(BuildContext context) {
+    final _formKey = GlobalKey < FormState > ();
     String name;
     String phoneNumber;
     String status;
@@ -122,22 +107,14 @@ class _AddCustomerFormState extends State < AddCustomerForm > {
                         "phone": phoneNumber,
                         "status": status,
                         "username": uname,
+                        "timeStamp": DateTime.now()
                       }).then((_) {
                         print("success!");
                       });
 
-                      //Customer.customers.add(Customer(name: name, phoneNumber: phoneNumber));
 
 
-
-                      var snackBar = Scaffold.of(context).showSnackBar(
-                        SnackBar(duration: Duration(microseconds: 1000),
-                          content: Text("$name isimli müşteri kaydedildi")),
-                      );
-
-                      snackBar.closed.then((onValue) {
-                        Navigator.pop(context);
-                      });
+                      Navigator.pop(context);
 
                     }
                   }
@@ -150,4 +127,15 @@ class _AddCustomerFormState extends State < AddCustomerForm > {
       ],
     );
   }
+
+  Widget _floatingActionButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+
+      },
+      label: Text("Onayla"),
+      icon: Icon(Icons.check),
+    );
+  }
+
 }
