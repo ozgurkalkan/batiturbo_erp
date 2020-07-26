@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "843843196108",
+    "firebase_url": "https://batiturboerp.firebaseio.com",
+    "project_id": "batiturboerp",
+    "storage_bucket": "batiturboerp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843843196108:android:abde14f4731100c6105e69",
+        "android_client_info": {
+          "package_name": "com.batiturbo.bati_turbo_erp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "843843196108-b0l2s02d8timdd67n23sq9g3plhsf0jm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.batiturbo.bati_turbo_erp",
+            "certificate_hash": "c230dab5fe5a76827d4df1f02f9438ec071423de"
+          }
+        },
+        {
+          "client_id": "843843196108-m3hji2qesge1k251nhuf46mdubsj1qpa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAV7zUzozfn9uxl9O2-gz6x15IiXHczrQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "843843196108-m3hji2qesge1k251nhuf46mdubsj1qpa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
