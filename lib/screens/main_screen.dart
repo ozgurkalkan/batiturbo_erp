@@ -1,12 +1,20 @@
+import 'package:bati_turbo_erp/core/locator.dart';
+import 'package:bati_turbo_erp/models/customers.dart';
+import 'package:bati_turbo_erp/screens/add_customer_page.dart';
 import 'package:bati_turbo_erp/screens/customer_details_page.dart';
+import 'package:bati_turbo_erp/viewmodels/customer_model.dart';
+import 'package:bati_turbo_erp/viewmodels/main_model.dart';
+//import 'package:bati_turbo_erp/viewmodels/main_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../utils/sign_in.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
 }
+
+//TODO: main screen floating action button ile alacak rengi aynı olacak
+
 
 class _MainScreenState extends State < MainScreen > {
 
@@ -17,35 +25,25 @@ class _MainScreenState extends State < MainScreen > {
 
   @override
   Widget build(BuildContext context) {
-    return mainScreenWidget();
-  }
-
-  Widget mainScreenWidget() {
-    if (uname != null) {
-      return _mainScreen();
-    } else {
-      return _loginScreen();
-    }
+    var model = getIt<MainModel>();
+    return _mainScreen();
   }
 
   Widget _mainScreen() {
+
+    var model = getIt<MainModel>();
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CustomerPage()));
+        onPressed: () async {
+          await model.navigateToCustomerAdd();
         },
         label: Text("Müşteri Ekle"),
-        icon: Icon(Icons.add),
+        icon: Icon(Icons.person_add),
       ),
       body: Container(
         color: Theme.of(context).primaryColor,
         child: SafeArea(
-
           child: NestedScrollView(
-
             headerSliverBuilder:
             (BuildContext context, bool innerBoxIsScrolled) {
               return [
@@ -62,9 +60,11 @@ class _MainScreenState extends State < MainScreen > {
                       icon: Icon(Icons.more_vert),
                       onPressed: () {},
                     ),
+                    /*
                     CircleAvatar(
                       backgroundImage: NetworkImage(uimageUrl),
                     )
+                    */
                   ]
                 )
               ];
@@ -132,110 +132,61 @@ class _MainScreenState extends State < MainScreen > {
   }
 
   Widget _customerList() {
+    var userId = "Ru88CAKWaDOENKfMFWP5mdJWFK52";
+    var model = getIt<CustomerModel>();
 
-    return StreamBuilder(
-      stream: Firestore.instance.collection('customer').orderBy("timeStamp", descending: true).snapshots(),
-      builder: (BuildContext context, AsyncSnapshot < QuerySnapshot > snapshot) {
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
+    return ChangeNotifierProvider(
+          create: (BuildContext context) => model,
+          child: StreamBuilder<List<Customer>>(
+        stream: model.customers(userId),
+        builder: 
+          (BuildContext context, AsyncSnapshot<List<Customer>> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text('Loading...');
-        }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text('Loading...');
+          }
 
 
-        return ListView(
-          children: snapshot.data.documents
-          .map(
-            (doc) => ListTile(
-              title: Text(doc['name']),
-              subtitle: Text(doc['status']),
-              trailing: Column(
-                children: < Widget > [
-                  Container(
-                    width: 25,
-                    height: 25,
-                    margin: EdgeInsets.only(top: 8),
-                    child: InkWell(
-                      child: Icon(Icons.call),
-                      onTap: () {
-                        // ignore: todo
-                        //TODO: müşteri Arama eklenecek
-                      },
-                    ),
-                  )
-                ],
+          return ListView(
+            children: snapshot.data
+            .map(
+              (doc) => ListTile(
+                title: Text(doc.name),
+                subtitle: Text(doc.status),
+                trailing: Column(
+                  children: < Widget > [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      margin: EdgeInsets.only(top: 8),
+                      child: InkWell(
+                        child: Icon(Icons.call),
+                        onTap: () {
+                          // ignore: todo
+                          //TODO: müşteri Arama eklenecek
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                onTap: () {
+                  // ignore: todo
+                  //TODO: müşteri detay sayfası düzenlenecek
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CustomerDetailPage(
+                        //userId: userId,
+                      )));
+                },
               ),
-              onTap: () {
-                // ignore: todo
-                //TODO: müşteri detay sayfası düzenlenecek
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CustomerPage()));
-              },
-            ),
-          )
-          .toList(),
-        );
-      },
-    );
-  }
-
-  Widget _loginScreen() {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: < Widget > [
-            FlutterLogo(size: 150),
-            SizedBox(height: 50),
-            _signInButton(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _signInButton() {
-    return OutlineButton(
-      splashColor: Colors.grey,
-      onPressed: () {
-        signInWithGoogle().whenComplete(() {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return MainScreen();
-              },
-            ),
+            )
+            .toList(),
           );
-        });
-      },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.grey),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: < Widget > [
-              Image(image: AssetImage("assets/google_logo.png"), height: 35.0),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                  child: Text(
-                    'Sign in with Google',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.grey,
-                    ),
-                  ),
-              )
-            ],
-          ),
+        },
       ),
     );
   }

@@ -1,21 +1,18 @@
-import 'package:bati_turbo_erp/utils/sign_in.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-class CustomerPage extends StatefulWidget {
+class CustomerDetailPage extends StatefulWidget {
   @override
-  _CustomerPageState createState() => _CustomerPageState();
+  _CustomerDetailPageState createState() => _CustomerDetailPageState();
 }
 
-class _CustomerPageState extends State < CustomerPage > {
+class _CustomerDetailPageState extends State < CustomerDetailPage > {
   @override
   Widget build(BuildContext context) {
 
-    return _customerPage();
+    return _customerDetailPage();
   }
 
-  Widget _customerPage() {
+  Widget _customerDetailPage() {
     return Scaffold(
       appBar: AppBar(
         title: Text("Müşteri Ekleme"),
@@ -29,113 +26,27 @@ class _CustomerPageState extends State < CustomerPage > {
 
   Widget _customerForm() {
 
-    final _formKey = GlobalKey < FormState > ();
-    String name;
-    String phoneNumber;
-    String status;
-
+ 
     return Column(
-      children: < Widget > [
-        Padding(
-          padding: EdgeInsets.all(8),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: < Widget > [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Müşteri Adı"),
-                    // ignore: missing_return
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return "İsim giriniz";
-                      }
-                    },
-                    onSaved: (value) {
-                      name = value;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: TextFormField(
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(hintText: "Telefon Numarası"),
-                    // ignore: missing_return
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return "Telefon Numarası Giriniz";
-                      }
-                    },
-                    onSaved: (value) {
-                      phoneNumber = value;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: TextFormField(
-                    decoration: InputDecoration(hintText: "status giriniz"),
-                    // ignore: missing_return
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return "status giriniz";
-                      }
-                    },
-                    onSaved: (value) {
-                      status = value;
-                    },
-                  ),
-                ),
-
-                RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  textColor: Colors.white,
-                  child: Text("Onayla"),
-                  onPressed: () async {
-
-                    final databaseReference = Firestore.instance;
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-
-                      //var firebaseUser = await FirebaseAuth.instance.currentUser();
-                      databaseReference.collection("customer").document().setData({
-                        "name": name,
-                        "phone": phoneNumber,
-                        "status": status,
-                        "username": uname,
-                        "timeStamp": DateTime.now()
-                      }).then((_) {
-                        print("success!");
-                      });
-
-
-
-                      Navigator.pop(context);
-
-                    }
-                  }
-                )
-              ]
-            ),
-          ),
-
-        )
-      ],
     );
   }
 
   Widget _floatingActionButton() {
     return FloatingActionButton.extended(
-      onPressed: () {
+      onPressed: () async {
+        /*
+        var userId = "xnBbb3iFJbWR6q9V2wcgF3HJRaE2";
+        var model = GetIt.instance < CustomerModel > ();
+        if () {
+        }
+        */
 
       },
       label: Text("Onayla"),
       icon: Icon(Icons.check),
     );
   }
+
+
 
 }
